@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 validation</title>
+    <link rel="stylesheet" href="misson1.css">
+</head>
+
+<body>
+    <main>
+
+    <h1>회원가입</h1>
+
+    <fieldset>이름<br>
+        <input type="text" id="username">
+    </fieldset>
+    <div class="success-name hide">멋진 이름이네요!</div>
+    <div class="fail-name hide">필수 입력 항목입니다!</div>
+
+    <fieldset>이메일<br>
+        <input type="email" id="email">
+    </fieldset>
+    <div class="success-email hide">올바른 이메일 형식입니다!</div>
+    <div class="fail-email hide">올바르지 않은 이메일 형식입니다!</div>
+
+    <fieldset>나이<br>
+        <input type="text" id="age">
+    </fieldset>
+    <div class="success-age hide">올바른 나이 형식 입니다!</div>
+    <div class="fail-age hide">나이를 입력해 주세요!</div>
+
+    <fieldset>비밀번호<br>
+        <input type="password" id="password">
+    </fieldset>
+    <div class="success-password hide">올바른 비밀 번호 입니다!</div>
+    <div class="fail-password hide">비밀번호는 최소 4자리 이상이어야 합니다.</div>
+
+    <fieldset>비밀번호 확인<br>
+        <input type="password" id="password-retype">
+    </fieldset>
+    <div class="mismatch-message hide">비밀번호가 일치하지 않습니다</div>
+    <div class="match-message hide">비밀번호가 일치합니다!</div>
+
+
+
+    <button id="signupButton">가입하기</button>
+    <div class="modal-wrapper" style="display: none;">
+        <div class="modal">
+          <div class="modal-title">가입 성공!</div>
+          <strong>umc 챌린저 가입을 축하합니다!!</strong>
+          <div class="close-wrapper">
+            <button id="close" class="closeButton">닫기</button>
+          </div>
+        </div>
+      </div>
+    <script src="misson1.js"></script>
+    </main>
+</body>
+</html>
