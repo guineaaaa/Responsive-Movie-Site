@@ -65,7 +65,7 @@ const MoviePoster = styled.img`
   }
 `;
 
-const API_KEY = 'dc195bf5297b4c66f4a536ba48071ab7';
+const API_KEY = '';
 
 const NowPlayingPage = () => {
   const [movies, setMovies] = useState([]);
