@@ -1,0 +1,88 @@
+body {
+  background-color: rgb(26, 26, 101);
+}
+
+.app-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.movie-container {
+  position: relative; /* 포지션을 상대적으로 설정하여 자식 요소를 상대적으로 배치할 수 있도록 합니다. */
+  width: 250px;
+  margin: 16px;
+  background-color: rgb(32, 32, 124);
+  color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.movie-container img {
+  max-width: 100%;
+}
+
+.movie-info {
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.movie-info h4 {
+  margin: 0;
+}
+
+.movie-info span {
+  margin-left: 3px;
+}
+
+.movie-details {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px;
+  display: none; /* 기본적으로 숨김 */
+}
+
+.movie-details.show {
+  display: block; /* 보이도록 함 */
+}
+
+.movie-discription{
+  display:flex;
+}
+
+.movie-description {
+  position: absolute; /* 절대 위치 */
+  top: 0; /* 상단 정렬 */
+  left: 0; /* 좌측 정렬 */
+  width: 100%; /* 부모 요소에 꽉 차도록 */
+  height: 100%; /* 부모 요소에 꽉 차도록 */
+  background-color: rgba(0, 0, 0, 0.7); /* 반투명한 하얀색 배경 */
+  display: flex; /* Flexbox 레이아웃 사용 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  opacity: 0; /* 초기에는 투명하게 설정 */
+  font-size:13px;
+  transition: opacity 0.3s; /* 부드러운 투명도 전환 */
+}
+
+.movie-description p {
+  text-align: justify; /* 가운데 정렬 */
+  margin:10px;
+}
+
+.movie-container:hover .movie-description {
+  opacity: 1; /* 마우스 호버 시 투명도 증가 */
+}
+
+.title-wrapper {
+  display: flex;
+  position:absolute;
+  top:2%;
+  text-decoration:bold;
+  font-size:16px;
+}

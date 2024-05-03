@@ -1,0 +1,94 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: aliceblue;
+}
+
+.main {
+    width: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    padding: 15px;
+}
+input[type="text"] {
+    height: 40px;
+    width: calc(100% - 80px); /* 입력창의 너비 설정 (버튼의 너비만큼 감소시킴) */
+    outline: none;
+    border: 1px solid black;
+    font-size: 1em;
+    margin-right: 10px; /* 입력창과 버튼 사이의 간격 조정 */
+}
+
+button {
+    width: 100px; /* 완료 버튼의 너비를 100px로 고정합니다. */
+    height: 40px;
+    font-size: 0.8em;
+    background-color: rgb(131, 182, 227);
+    border: none;
+}
+
+.tasksBoard {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between; /* 변경 */
+    align-items: flex-start; /* 변경 */
+}
+
+.tasksBoard > div {
+    margin: 0 80px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    border-bottom: 2px solid rgb(141, 209, 238);
+    padding-bottom: 1px;
+}
+
+hr {
+    border: 1px solid rgb(141, 209, 238); /* 혹은 다른 원하는 스타일 설정 */
+    width: 100%; /* 수평선이 부모 요소에 가득 차도록 설정 */
+}
+a {
+    float: right;
+    text-align: right;
+    color: black;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* 입력창과 버튼 사이의 간격 조정 */
+}
+
+input[type="text"] {
+    height: 40px;
+    width: 200px; /* 입력창의 너비를 200px로 고정합니다. */
+    outline: none;
+    border: 1px solid black;
+    font-size: 1em;
+    margin-right: 10px; /* 입력창과 버튼 사이의 간격 조정 */
+}
+.input-group button {
+    font-size: 1.5em;
+    background-color: white;
+    width: 70px;
+    margin-right:50px;
+}
