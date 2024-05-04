@@ -66,7 +66,7 @@ const MoviePoster = styled.img`
 `;
 
 
-const API_KEY = 'dc195bf5297b4c66f4a536ba48071ab7'; // Replace with your movie API key
+const API_KEY = 'API_KEY'; // Replace with your movie API key
 
 const UpcomingPage = () => {
   const [movies, setMovies] = useState([]);
