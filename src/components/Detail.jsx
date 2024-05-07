@@ -57,7 +57,7 @@ const MoviePoster = styled.img`
   margin-right:60px;
 `;
 
-const API_KEY = 'dc195bf5297b4c66f4a536ba48071ab7';
+const API_KEY = apikey
 
 
 const Detail = () => {
