@@ -8,7 +8,7 @@ const NavbarContainer = styled.nav`
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #0a0a5c;
+  background-color: #080845;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,36 +47,16 @@ const NavLinkButton = styled(NavLink)`
   }
 `;
 
-const BaseButtonStyles = `
-  color: white;
-  font-weight: bold;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    color: yellow;
-  }
-`;
 
-const LoginButton = styled.button`
-  ${BaseButtonStyles}
-  font-size: inherit;
-`;
+
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLoginToggle = () => {
-    setIsLoggedIn(prevState => !prevState);
-  };
-
+ 
   return (
     <NavbarContainer>
       <Brand to="/" exact>UMC Movie</Brand>
       <ButtonContainer>
-        <LoginButton onClick={handleLoginToggle}>
-          {isLoggedIn ? '로그아웃' : '로그인'}
-        </LoginButton>
+        <NavLinkButton to="/signup" activeClassName="active">회원가입</NavLinkButton>
         <NavLinkButton to="/popular" activeClassName="active">Popular</NavLinkButton>
         <NavLinkButton to="/now-playing" activeClassName="active">Now Playing</NavLinkButton>
         <NavLinkButton to="/top-rated" activeClassName="active">Top Rated</NavLinkButton>

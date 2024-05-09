@@ -24,6 +24,7 @@ const WelcomeBanner = styled.div`
 `;
 
 const FindMovieBanner = styled.div`
+
   text-align: center;
   background-color: #0a0a5c;
   font-size: 30px;

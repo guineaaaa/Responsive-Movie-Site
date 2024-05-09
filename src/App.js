@@ -10,6 +10,9 @@ import UpcomingPage from './components/UpComingPage';
 import Loading from './components/Loading';
 import NotFound from './components/NotFound';
 import Detail from './components/Detail'; // Detail 컴포넌트를 import
+import Signup from './components/Signup';
+import Login from './components/Login';
+
 import './App.css';
 
 function App() {
@@ -24,6 +27,11 @@ function App() {
         <Route path="/upcoming" element={<UpcomingPage />} />
         {/* 영화 상세 정보 페이지에 대한 라우트 */}
         <Route path="/movie/:id" element={<Detail />} />
+
+        {/* signup 경로에 대한 라우트 */}
+        <Route path="/signup" element={<Signup />} />
+
+        <Route path="/Login" element={<Login />} />
         {/* Not found 경로에 대한 라우트 */}
         <Route path="*" element={<NotFound/>}></Route>
       </Routes>
