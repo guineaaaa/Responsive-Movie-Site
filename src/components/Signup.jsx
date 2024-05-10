@@ -185,24 +185,28 @@ const Signup = () => {
         }
     };
 
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         const signupInfo = {
             name: name,
             email: email,
             age: age,
             password: password,
         };
-
+    
+        // 로컬 스토리지에 회원 가입 정보 저장
+        localStorage.setItem('signupInfo', JSON.stringify(signupInfo));
+    
         const signup_info = {
-            method: "POST",
-            body: JSON.stringify(signupInfo),
-            headers: {
+            method: "POST", //서버로 데이터 전송하기
+            body: JSON.stringify(signupInfo), //전송할데이터를 JSON형식으로
+            headers: { //HTTP요청 헤더를 설정한다. 전송되는 데이터의 형식은 JSON임
                 "Content-Type": "application/json"
             }
         };
-
+    
         if (isName && isEmail && isAge && isPassword && isPasswordConfirm) {
             console.log(signupInfo);
             fetch("http://localhost:3000/Login", signup_info)
@@ -214,7 +218,12 @@ const Signup = () => {
         } else {
             alert("입력 값을 확인해주세요");
         }
+    
+        // 로컬 스토리지에 저장된 회원 가입 정보 콘솔에 출력
+        const storedSignupInfo = JSON.parse(localStorage.getItem('signupInfo'));
+        console.log("Stored Signup Info:", storedSignupInfo);
     }
+    
 
     // 제출하기 버튼 스타일링을 위한 클래스 조건 설정
     const submitButtonStyle = isName && isEmail && isAge && isPassword && isPasswordConfirm ? true : false;
