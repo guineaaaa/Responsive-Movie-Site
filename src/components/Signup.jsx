@@ -184,6 +184,7 @@ const Signup = () => {
             setIsPasswordConfirm(true);
         }
     };
+    
     const handleSubmit = (e) => {
         e.preventDefault();
     
@@ -197,6 +198,7 @@ const Signup = () => {
         // 로컬 스토리지에 회원 가입 정보 저장
         localStorage.setItem('signupInfo', JSON.stringify(signupInfo));
     
+        
         const signup_info = {
             method: "POST", //서버로 데이터 전송하기
             body: JSON.stringify(signupInfo), //전송할데이터를 JSON형식으로
@@ -215,7 +217,7 @@ const Signup = () => {
                 .catch(error => console.error('Error:', error));
         } else {
             alert("입력 값을 확인해주세요");
-        }
+        } 
     
         // 로컬 스토리지에 저장된 회원 가입 정보 콘솔에 출력
         const storedSignupInfo = JSON.parse(localStorage.getItem('signupInfo'));

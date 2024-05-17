@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import UseDebounce from './UseDebounce';
+import Loading from './Loading';
 
 // Styled components
 const MainPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  p { 
+    font-size: 20px;
+  }
 `;
 
 const WelcomeBanner = styled.div`
@@ -17,7 +23,6 @@ const WelcomeBanner = styled.div`
   padding: 8%;
   font-size: 28px;
   width: 100%;
-  
 `;
 
 const FindMovieBanner = styled.div`
@@ -33,19 +38,39 @@ const FindMovieBanner = styled.div`
   align-items: center;
 `;
 
+const SearchContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
 const SearchInput = styled.input`
   width: 50%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 20px;
-  margin-top: 20px;
 `;
 
+const SearchButton = styled.button`
+  margin-left: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: #edbb32;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
-
+  &:hover {
+    background-color: #d4a429;
+  }
+`;
 
 const SearchResultContainer = styled.div`
-  margin-top:3%;
+  margin-top: 3%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -53,24 +78,24 @@ const SearchResultContainer = styled.div`
   max-width: 80%;
   overflow-y: auto;
   width: 100%;
-  background-color:#080845;
+  background-color: #080845;
 
   &::-webkit-scrollbar {
     width: 12px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #edbb32; /* 스크롤바 색상 */
-    border-radius: 10px; /* 스크롤바 모양 */
+    background: #edbb32;
+    border-radius: 10px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #05052e; /* 스크롤바 트랙 색상 */
+    background: #05052e;
   }
 `;
 
 const MovieCard = styled.div`
-  flex: 0 0 calc(19% - 15px); /* 25%를 차지하고 margin이 20px이므로 여백을 고려하여 너비 설정 */
+  flex: 0 0 calc(19% - 15px);
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -80,6 +105,7 @@ const MovieCard = styled.div`
   color: white;
   overflow: hidden;
   transition: background-color 0.3s;
+
   &:hover {
     background-color: rgba(32, 32, 124, 0.9);
   }
@@ -100,6 +126,7 @@ const MoviePoster = styled.img`
   max-width: 100%;
   border-radius: 5px;
   transition: filter 0.3s;
+
   ${MovieCard}:hover & {
     filter: brightness(70%);
   }
@@ -107,63 +134,76 @@ const MoviePoster = styled.img`
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-// Main page component
 const MainPage = () => {
-  const [searchQuery, setSearchQuery] = useState(''); //검색어 상태 관리
-  const [searchResults, setSearchResults] = useState([]); //검색 결과 상태 관리
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
-  //검색어 입력 핸들러
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const debouncedText = UseDebounce(searchQuery, 500);
+
+  const fetchMovies = async (query) => {
+    const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${query}`;
+
+    if (query.trim() === '') {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsLoading(true); // 데이터를 받아오기 시작할 때 로딩 상태 true로 설정
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setSearchResults(data.results);
+    } catch (error) {
+      console.error('검색 중 오류 발생', error);
+    } finally {
+      setIsLoading(false); // 데이터를 받아온 후 로딩 상태 false로 설정
+    }
+  };
+
   const handleInputChange = (event) => {
-    setSearchQuery(event.target.value); //입력된 검색어를 상태 변수에 저장함
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    fetchMovies(searchQuery);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      // 검색어가 빈 문자열이면 검색 결과를 초기화 하고 return 한다
-      if (searchQuery.trim() === '') {
-        setSearchResults([]);
-        return;
-      }
-
-      try {
-        //영화 DB API로 검색 요청을 보낸다
-        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${searchQuery}`);
-        const data = await response.json(); //응답 데이터를 JSON 형식으로 변환
-        setSearchResults(data.results); // 검색 결과를 상태 변수에 저장
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-      }
-    };
-
-    fetchData(); //fetchData() 실행
-  }, [searchQuery]); //SearchQuery 값이 변경 될때 마다 useEffect()가 실행됨
+    fetchMovies(debouncedText);
+  }, [debouncedText]);
 
   return (
     <MainPageContainer>
       <Navbar />
       <WelcomeBanner><strong>환영합니다</strong></WelcomeBanner>
+
       <FindMovieBanner>
         <strong>🎥Find your movies!</strong>
 
-
-        <SearchInput
-          type="text"
-          placeholder="Search for movies..."
-          value={searchQuery}
-          onChange={handleInputChange}
-        />
+        <SearchContainer>
+          <SearchInput type="text" placeholder="Search for movies..." value={searchQuery} onChange={handleInputChange} />
+          <SearchButton onClick={handleSearchClick}>🔍</SearchButton>
+        </SearchContainer>
 
         <SearchResultContainer>
-          {searchResults && searchResults.length > 0 && searchResults.map(movie => (
-            <MovieCard key={movie.id}>
-              <MoviePoster src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={`${movie.title} Poster`} />
-              <MovieTitle>{movie.title}</MovieTitle>
-              <MovieRating>⭐ {movie.vote_average}</MovieRating>
-            </MovieCard>
-          ))}
+          {isLoading ? (
+            <p>데이터를 받아오는 중입니다...</p>
+          ) : (
+            searchResults && searchResults.length > 0 && searchResults.map(movie => (
+              <Link key={movie.id} to={`/movie/${movie.id}`}>
+                <MovieCard>
+                  <MoviePoster src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={`${movie.title} Poster`} />
+                  <MovieTitle>{movie.title}</MovieTitle>
+                  <MovieRating>⭐ {movie.vote_average}</MovieRating>
+                </MovieCard>
+              </Link>
+            ))
+          )}
         </SearchResultContainer>
-
       </FindMovieBanner>
+
       <Footer />
     </MainPageContainer>
   );
