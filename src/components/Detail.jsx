@@ -15,12 +15,14 @@ const DetailContainer = styled.div`
 
 const MovieInfo = styled.div`
   position: absolute;
-  top: 0; 
+  padding-top:10%;
+  padding-bottom:10%;
+  top:0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(10, 10, 92, 0.7);
-  overflow-y: auto;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -68,15 +70,16 @@ const MoviePoster = styled.img`
   max-width: 250px;
   max-height: 100%;
   border-radius: 5px;
+  padding-top:5%;
 `;
 
 const PeopleContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 80%;
   margin-top: 20px;
 `;
 
@@ -101,6 +104,8 @@ const PersonImg = styled.img`
 
 const PersonInfo = styled.div`
   text-align: center;
+  width:80%;
+  font-size:12px;
 `;
 
 const API_KEY = process.env.REACT_APP_API_KEY;
