@@ -117,14 +117,6 @@ const Login = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('isLoggedIn');
-        alert("로그아웃 되었습니다.");
-        navigate('/login'); // Redirect to the login page or any other appropriate page
-    };
-
     return (
         <LogInContainer>
             <Title>로그인 페이지</Title>
@@ -147,7 +139,6 @@ const Login = () => {
                 <br />
                 <Submit type="submit">로그인</Submit>
             </form>
-            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
         </LogInContainer>
     );
 }
