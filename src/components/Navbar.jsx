@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-
 
 const NavbarContainer = styled.nav`
   position: fixed;
@@ -27,10 +26,10 @@ const Brand = styled(NavLink)`
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 20px; /* Reduce the gap between buttons */
+  gap: 20px;
   max-width: 50%;
-  overflow-x: auto; /* Allow horizontal scrolling */
-  padding-right: 40px; /* Add right padding to accommodate scrollbar */
+  overflow-x: auto;
+  padding-right: 40px;
 `;
 
 const NavLinkButton = styled(NavLink)`
@@ -47,16 +46,52 @@ const NavLinkButton = styled(NavLink)`
   }
 `;
 
-
-
+const LogoutButton = styled.button`
+  text-decoration: none;
+  color: #fff;
+  background: none;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    color: yellow;
+  }
+  font-size:16px;
+`;
 
 const Navbar = () => {
- 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check login status from localStorage when the component mounts
+    const loggedInStatus = localStorage.getItem('isLoggedIn');
+    if (loggedInStatus === 'true') {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.setItem('isLoggedIn', 'false');
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
+  };
+
   return (
     <NavbarContainer>
       <Brand to="/" exact>UMC Movie</Brand>
       <ButtonContainer>
-        <NavLinkButton to="/signup" activeClassName="active">회원가입</NavLinkButton>
+        {isLoggedIn ? (
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+        ) : (
+          <>
+            <NavLinkButton to="/signup" activeClassName="active">회원가입</NavLinkButton>
+            <NavLinkButton to="/login" activeClassName="active" onClick={handleLogin}>로그인</NavLinkButton>
+          </>
+        )}
         <NavLinkButton to="/popular" activeClassName="active">Popular</NavLinkButton>
         <NavLinkButton to="/now-playing" activeClassName="active">Now Playing</NavLinkButton>
         <NavLinkButton to="/top-rated" activeClassName="active">Top Rated</NavLinkButton>

@@ -1,8 +1,8 @@
-// NowPlayingPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Loading from './Loading'; // Loading 컴포넌트를 가져옵니다.
 
 const NowPlayingContainer = styled.div`
   padding: 20px;
@@ -48,37 +48,49 @@ const MoviePoster = styled.img`
   }
 `;
 
-const API_KEY=process.env.REACT_APP_API_KEY;
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 const NowPlayingPage = () => {
   const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchNowPlaying = async () => {
+    try {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&page=${page}`);
+      const data = await response.json();
+      setMovies(prevMovies => [...prevMovies, ...data.results]);
+      if (data.results.length === 0 || data.results.length < 20) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching now playing movies:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchNowPlaying = async () => {
-      try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`);
-        const data = await response.json();
-        setMovies(data.results);
-      } catch (error) {
-        console.error('Error fetching now playing movies:', error);
-      }
-    };
-
     fetchNowPlaying();
-  }, []);
+  }, [page]);
 
   return (
-    <NowPlayingContainer>
-      {movies.map(movie => (
-        <Link key={movie.id} to={`/movie/${movie.id}`}>
-          <MovieCard>
-            <MoviePoster src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={`${movie.title} Poster`} />
-            <MovieTitle>{movie.title}</MovieTitle>
-            <MovieRating>⭐ {movie.vote_average}</MovieRating>
-          </MovieCard>
-        </Link>
-      ))}
-    </NowPlayingContainer>
+    <InfiniteScroll
+      dataLength={movies.length}
+      next={() => setPage(prevPage => prevPage + 1)}
+      hasMore={hasMore}
+      loader={<Loading />}
+    >
+      <NowPlayingContainer>
+        {movies.map(movie => (
+          <Link key={movie.id} to={`/movie/${movie.id}`}>
+            <MovieCard>
+              <MoviePoster src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={`${movie.title} Poster`} />
+              <MovieTitle>{movie.title}</MovieTitle>
+              <MovieRating>⭐ {movie.vote_average}</MovieRating>
+            </MovieCard>
+          </Link>
+        ))}
+      </NowPlayingContainer>
+    </InfiniteScroll>
   );
 };
 
