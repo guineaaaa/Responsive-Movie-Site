@@ -180,39 +180,46 @@ const Signup = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
         e.preventDefault();
-      
+    
         const signupInfo = {
-            name: name,
+            name,
+            email,
+            age,
             username: id,
-            email: email,
-            age: age
+            password,
+            passwordCheck: passwordConfirm,
         };
-
-        // 비밀번호와 비밀번호 확인 정보를 토큰으로 변환
-        const passwordToken = btoa(JSON.stringify({ password: password, passwordCheck: passwordConfirm }));
-        
-        // 비밀번호 토큰을 로컬스토리지에 저장
-        localStorage.setItem('passwordToken', passwordToken);
-
+    
+        const signup_info = {
+            method: "POST",
+            body: JSON.stringify(signupInfo),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+    
         try {
-            await fetch('/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${passwordToken}` // 비밀번호 토큰을 헤더에 포함
-                },
-                body: JSON.stringify(signupInfo),
-            });
-
-            // 회원가입 성공 시의 처리
-            alert("가입이 완료되었습니다.");
-            navigate('/Login'); // useNavigate를 사용하여 페이지 이동
-            localStorage.setItem('id', id);
+            const response = await fetch("http://localhost:8080/auth/signup", signup_info);
+    
+            if (response.status === 201) {
+                const data = await response.json();
+                console.log("회원가입 성공!", data);
+                alert("회원가입이 정상적으로 처리되었습니다!");
+    
+                // 로컬 스토리지에 회원 가입 정보 저장
+                localStorage.setItem('signupInfo', JSON.stringify(signupInfo));
+    
+                navigate("/login"); // useNavigate 훅을 사용하여 라우팅 처리
+            } else {
+                const data = await response.json();
+                setError(data.message);
+                alert(data.message);
+            }
         } catch (error) {
-            console.error('Error: ', error);
-            alert("회원가입에 실패했습니다. 다시 시도해 주세요");
+            console.error("Error:", error);
+            alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
     };
 
