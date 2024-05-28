@@ -89,28 +89,38 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isId && isPassword) {
-            const storedId = localStorage.getItem('id');
-            const storedPasswordToken = localStorage.getItem('passwordToken');
-            const storedPasswordData = storedPasswordToken ? JSON.parse(atob(storedPasswordToken)) : null;
-    
-            console.log("storedId:", storedId);
-            console.log("storedPasswordData:", storedPasswordData);
-    
-            if (storedId && storedPasswordData) {
-                const { password: storedPassword } = storedPasswordData;
-                console.log("storedPassword:", storedPassword); 
-    
-                if (id === storedId && password === storedPassword) {
-                    alert(`${id}님 환영합니다.`);
-                    localStorage.setItem('token', 'dummy-token'); // Save a dummy token for session management
+            const loginInfo = {
+                username: id,
+                password,
+            };
+
+            const login_info = {
+                method: "POST",
+                body: JSON.stringify(loginInfo),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+
+            try {
+                const response = await fetch("http://localhost:8080/auth/login", login_info);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("로그인 성공!", data);
+                    localStorage.setItem('token', data.token);
                     localStorage.setItem('userId', id);
                     localStorage.setItem('isLoggedIn', 'true');
+                    alert(`${id}님 환영합니다.`);
                     navigate('/');
                 } else {
-                    alert("아이디 혹은 비밀번호를 확인하세요.");
+                    const data = await response.json();
+                    setError(data.message);
+                    alert(data.message);
                 }
-            } else {
-                alert("저장된 계정 정보가 없습니다. 회원가입을 진행해주세요.");
+            } catch (error) {
+                console.error("Error:", error);
+                alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
             }
         } else {
             alert("아이디와 비밀번호를 모두 입력해주세요.");
