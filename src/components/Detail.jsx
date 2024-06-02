@@ -3,83 +3,114 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 
 const DetailContainer = styled.div`
-  padding: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-size: 30%;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: white;
+  height: 100vh;
+  width: 100vw;
+  
+  padding: 20px;
+  box-sizing: border-box;
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const MovieInfo = styled.div`
   position: absolute;
-  padding-top:10%;
-  padding-bottom:10%;
-  top:0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(10, 10, 92, 0.7);
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  padding-right: 40px; 
-  padding-left: 30px;
+  padding: 50px;
+  box-sizing: border-box;
+  border-radius: 10px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const MovieContent = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  width: 100%;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const MovieDetails = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  margin-left: 60px;
+  margin-left: 4em;
+  max-width: 600px;
+  @media (max-width: 768px) {
+    margin-left: 0;
+    align-items: center;
+  }
 `;
 
 const MovieTitle = styled.h1`
-  font-size: 24px;
+  font-size: 2em;
   margin-bottom: 10px;
+  text-align: center;
 `;
 
 const MovieRating = styled.p`
-  font-size: 16px;
+  font-size: 1em;
   margin-bottom: 10px;
+  text-align: center;
 `;
 
 const MovieOverview = styled.p`
-  font-size: 16px;
+  font-size: 1em;
   margin-bottom: 10px;
-  text-overflow: clip;
-  width: 600px;
+  text-align: justify;
+  width: 100%;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 const MovieReleaseDate = styled.p`
-  font-size: 16px;
+  font-size: 1em;
+  text-align: center;
 `;
 
 const MoviePoster = styled.img`
-  max-width: 250px;
-  max-height: 100%;
+  max-width: 15em;
+  max-height: 30em;
+  margin-top: 2em;
+  margin-left:10em;
   border-radius: 5px;
-  padding-top:5%;
+  @media (max-width: 768px) {
+    max-width: 150px;
+    max-height: 225px;
+    margin-right:10em;
+    margin-top: 0; /* 작은 화면에서는 마진을 제거하여 더 중앙에 배치 */
+  
+  }
 `;
 
 const PeopleContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin-top: 20px;
 `;
 
@@ -104,8 +135,7 @@ const PersonImg = styled.img`
 
 const PersonInfo = styled.div`
   text-align: center;
-  width:80%;
-  font-size:12px;
+  font-size: 12px;
 `;
 
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -129,7 +159,6 @@ const Detail = () => {
 
         const creditsResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`);
         const creditsData = await creditsResponse.json();
-        
         setCredits(creditsData);
       } catch (error) {
         console.error('Error fetching movie details:', error);
@@ -152,7 +181,6 @@ const Detail = () => {
     return <div>Loading...</div>;
   }
 
-  //이미지 없음을 표시
   const handleError = (e) => {
     e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz7ztleRwzXhFdiwBYqZ8cib9RvEsukVVUS3niN1YQ&s';
   };
@@ -168,7 +196,7 @@ const Detail = () => {
   );
 
   return (
-    <DetailContainer posterPath={movie.poster_path}>
+    <DetailContainer>
       <MovieInfo>
         <MovieContent>
           <MoviePoster 
@@ -185,10 +213,9 @@ const Detail = () => {
             {overviewContent}
           </MovieDetails>
         </MovieContent>
-
         <div>
-            <People>출연진 및 제작진</People>
-          </div>
+          <People>출연진 및 제작진</People>
+        </div>
         <PeopleContainer>
           {credits && credits.cast && credits.cast.length > 0 ? (
             credits.cast.map((person) => (

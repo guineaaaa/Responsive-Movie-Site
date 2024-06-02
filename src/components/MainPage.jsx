@@ -12,7 +12,7 @@ const MainPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   p { 
-    font-size: 20px;
+    font-size: 20em;
   }
 `;
 
@@ -20,8 +20,8 @@ const WelcomeBanner = styled.div`
   text-align: center;
   background-color: black;
   color: white;
-  padding: 8%;
-  font-size: 28px;
+  padding: 4em;
+  font-size: 2em;
   width: 100%;
 `;
 

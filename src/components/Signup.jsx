@@ -11,7 +11,7 @@ const SignUpContainer = styled.div`
 const Title = styled.h1`
     text-align: center;
     color: white;
-    font-size: 28px;
+    font-size: 2em;
     padding: 35px;
     margin-top: 30px;
     margin-bottom: -10px;
@@ -42,7 +42,7 @@ const Submit = styled.button`
 
 const BacktoMain = styled.button`
     border: none;
-    font-size: 15px;
+    font-size: 1em;
     background: none;
     color: white;
     font-weight: bold;
@@ -51,27 +51,28 @@ const BacktoMain = styled.button`
 
 const If = styled.span`
     margin-top: 30px;
-    font-size: 15px;
+    font-size: 1em;
     color: white;
 `;
 
 const Signup = () => {
     const [name, setName] = useState("");
-    const [id, setID] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [age, setAge] = useState("");
     const [password, setPassword] = useState("");
-    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [passwordCheck, setPasswordConfirm] = useState("");
 
     const [nameMessage, setNameMessage] = useState("");
-    const [idMessage, setIDMessage] = useState("");
+    const [usernameMessage, setUsernameMessage] = useState("");
     const [emailMessage, setEmailMessage] = useState("");
     const [ageMessage, setAgeMessage] = useState("");
     const [passwordMessage, setPasswordMessage] = useState("");
     const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
+    const [error, setError] = useState("");
 
     const [isName, setIsName] = useState(false);
-    const [isId, setIsId] = useState(false);
+    const [isUsername, setIsUsername] = useState(false);
     const [isEmail, setIsEmail] = useState(false);
     const [isAge, setIsAge] = useState(false);
     const [isPassword, setIsPassword] = useState(false);
@@ -91,22 +92,22 @@ const Signup = () => {
         }
     };
 
-    const onChangeId = (e) => {
-        const currentId = e.target.value;
-        setID(currentId);
-        if (!currentId.trim()) {
-            setIDMessage("아이디를 입력하세요");
-            setIsId(false);
+    const onChangeUsername = (e) => {
+        const currentUsername = e.target.value;
+        setUsername(currentUsername);
+        if (!currentUsername.trim()) {
+            setUsernameMessage("아이디를 입력하세요");
+            setIsUsername(false);
         } else {
-            setIsId(true);
-            setIDMessage("");
+            setIsUsername(true);
+            setUsernameMessage("");
         }
     };
 
     const onChangeEmail = (e) => {
         const currentEmail = e.target.value;
         setEmail(currentEmail);
-        const emailRegExp = /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
+        const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
         if (!currentEmail.trim()) {
             setEmailMessage("이메일을 입력하세요");
@@ -182,41 +183,40 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-      
-        const signupInfo = {
-            name: name,
-            username: id,
-            email: email,
-            age: age
-        };
-
-        // 비밀번호와 비밀번호 확인 정보를 토큰으로 변환
-        const passwordToken = btoa(JSON.stringify({ password: password, passwordCheck: passwordConfirm }));
-        
-        // 비밀번호 토큰을 로컬스토리지에 저장
-        localStorage.setItem('passwordToken', passwordToken);
-
+    
         try {
-            await fetch('/auth/signup', {
-                method: 'POST',
+            const response = await fetch("http://localhost:8080/auth/signup", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${passwordToken}` // 비밀번호 토큰을 헤더에 포함
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(signupInfo),
+                body: JSON.stringify({
+                    name,
+                    email,
+                    age,
+                    username,
+                    password,
+                    passwordCheck,
+                }),
             });
 
-            // 회원가입 성공 시의 처리
-            alert("가입이 완료되었습니다.");
-            navigate('/Login'); // useNavigate를 사용하여 페이지 이동
-            localStorage.setItem('id', id);
+            if (response.status === 201) {
+                const data = await response.json();
+                console.log("회원가입 성공!", data);
+                alert("회원가입이 정상적으로 처리되었습니다!");
+                navigate("/login");
+            } else {
+                const data = await response.json();
+                setError(data.message);
+                alert(data.message); // 서버에서 받은 에러 메시지를 사용자에게 알림
+            }
         } catch (error) {
-            console.error('Error: ', error);
-            alert("회원가입에 실패했습니다. 다시 시도해 주세요");
+            console.error("Error:", error);
+            alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
     };
 
-    const submitButtonStyle = isName && isId && isEmail && isAge && isPassword && isPasswordConfirm;
+    const submitButtonStyle = isName && isUsername && isEmail && isAge && isPassword && isPasswordConfirm;
 
     return (
         <SignUpContainer>
@@ -225,8 +225,8 @@ const Signup = () => {
             <Input id="name" name="name" value={name} onChange={onChangeName} placeholder="이름을 입력해주세요" />
             <Warning>{nameMessage}</Warning>
 
-            <Input id="id" name="ID" value={id} onChange={onChangeId} placeholder="아이디를 입력해주세요" />
-            <Warning>{idMessage}</Warning>
+            <Input id="username" name="username" value={username} onChange={onChangeUsername} placeholder="아이디를 입력해주세요" />
+            <Warning>{usernameMessage}</Warning>
 
             <Input id="email" name="Email" value={email} onChange={onChangeEmail} placeholder="이메일을 입력해주세요" />
             <Warning>{emailMessage}</Warning>
@@ -234,10 +234,10 @@ const Signup = () => {
             <Input id="age" name="Age" value={age} onChange={onChangeAge} placeholder="나이를 입력해주세요" />
             <Warning>{ageMessage}</Warning>
 
-            <Input id="password" name="Password" value={password} onChange={onChangePassword} placeholder="비밀번호를 입력해주세요" />
+            <Input id="password" name="Password" type="password" value={password} onChange={onChangePassword} placeholder="비밀번호를 입력해주세요" />
             <Warning>{passwordMessage}</Warning>
 
-            <Input id="passwordConfirm" name="PasswordConfirm" value={passwordConfirm} onChange={onChangePasswordConfirm} placeholder="비밀번호 확인" />
+            <Input id="passwordCheck" name="PasswordCheck" type="password" value={passwordCheck} onChange={onChangePasswordConfirm} placeholder="비밀번호 확인" />
             <Warning>{passwordConfirmMessage}</Warning>
 
             <Submit active={submitButtonStyle} onClick={handleSubmit} disabled={!submitButtonStyle}>제출하기</Submit>
